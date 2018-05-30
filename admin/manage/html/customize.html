@@ -1,0 +1,123 @@
+<?php
+    $idx=$_GET['idx'];
+    $reception=$_GET['reception'];
+?>
+<!DOCTYPE html>
+<html lang ="ko">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Set character encoding -->
+  <meta charset="utf-8">
+  <title>Customize</title>
+  <link rel = "stylesheet" href="/bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+        }
+        .image{
+            position : relative;
+            height: 726px;
+            background: url(/images/fisherman_Bastion.jpg) no-repeat center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: calc(100vh);
+            min-height: 200px;
+        }
+        .image.container{
+        position:absolute;
+        color:white;
+        }
+        .hello{
+        color:white;
+        font-size:3rem;
+        text-align: center;
+        }
+        .push_edit{
+        position : absolute;
+        color : white;
+        }
+        .text-center{
+            text-align: center;
+        }
+				tr{
+					text-align: center;
+				}
+    </style>
+ <div class="image"`>
+        <br><br><br>
+        <div class="container">
+            <div class="starter-template">
+                <h1 class = "hello">푸시메시지 생성</h1>
+            </div>
+        </div>
+
+        <div class ="container">
+            <div class = "jumbotron">
+                <div id="push_edit">
+                    
+                    <div class="form-group">
+                      <label for="title">제목</label>
+                      <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요.">
+                    </div>
+                    <div class="form-group">
+                      <label for="content">내용</label>
+                      <textarea class="form-control" id="content" name="content" rows="3" placeholder="내용을 입력하세요."></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="term">도착페이지</label>
+                      <input type="text" class="form-control" id="dest" name="dest" placeholder="www.example.com">
+                    </div>
+                    <a href="#" onclick="sendPush('<?php echo $_GET["idx"]; ?>','<?php echo $_GET["reception"]; ?>')" class="btn btn-primary pull-right">푸시보내기</a>
+                    
+                    <form action="control.html"><input type="submit" value="되돌아가기" /></form>
+              </div>
+          </div>
+      </div>
+</div>
+    
+    <script type="text/javascript" charset="utf-8" >
+            function sendPush(idx, reception) {
+
+                var confirmPush = confirm('해당 고객에게 푸시 알림을 보내시겠습니까?');
+                if (confirmPush) {
+
+                    if(reception == "수신 확인"){
+                        alert('수신 확인된 고객에게는 푸시 알림을 보낼 수 없습니다.');
+                    }
+                    else{
+                        $.ajax({
+                                type: 'POST',
+                                url: 'https://chungullim.com:3000/process/sendPush',
+                                async: true,
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    "tag": 'customize',
+                                    "idx": idx,
+                                    "title": document.getElementById('title').value,
+                                    "content": document.getElementById('content').value,
+                                    "dest": document.getElementById('dest').value
+                                }),
+                                dataType:'json',
+                                processData: true,
+                                success: function(data){
+                                    alert("푸쉬 알림을 전송했습니다.");
+                                }
+                         });
+                    }
+                }
+                window.location.href = "control.html";
+                return;
+                
+            }    
+  </script>
+<script src="/bootstrap/js/jquery-3.3.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.js"></script>
+
+    </body>
+</html>
